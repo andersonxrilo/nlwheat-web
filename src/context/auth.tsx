@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { User } from "../types/user";
 import { api } from "../services/api";
+import axios from "axios";
 
 type AuthContextData = {
   user: User | null;
@@ -32,23 +33,19 @@ export function AuthProvider(props: AuthProvider) {
       code: githubCode,
     });
     const { token, user } = response.data;
+
+    api.defaults.headers.common.authorization = `Bearer ${token}`;
     localStorage.setItem("@dowhile:token", token);
     setUser(user);
   };
 
   useEffect(() => {
     const token = localStorage.getItem("@dowhile:token");
-
+    api.defaults.headers.common.authorization = `Bearer ${token}`;
     if (token) {
-      api
-        .get<User>("profile", {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          setUser(response.data);
-        });
+      api.get<User>("profile").then((response) => {
+        setUser(response.data);
+      });
     }
   }, []);
 
