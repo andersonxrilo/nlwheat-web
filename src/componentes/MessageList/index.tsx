@@ -3,14 +3,8 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import "./index.scss";
 import logoImg from "../../assets/logo.svg";
-import { User } from "../../types/user";
+import { Message } from "../../types/messages";
 
-type Message = {
-  id: string;
-  text: string;
-  created_at: string;
-  user: User;
-};
 const messagesQueue: Message[] = [];
 const socket = io("http://localhost:4000");
 
